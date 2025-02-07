@@ -7,13 +7,20 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const res = await axios.get("http://localhost:8080/api/projects", {
-        headers: { Authorization: token },
-      });
-      setProjects(res.data);
+      if (token) {
+        // Prevent API call if token is null
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/api/projects`,
+          {
+            headers: { Authorization: token },
+          }
+        );
+        setProjects(res.data);
+      }
     };
     fetchProjects();
-  }, []);
+  }, [token]); // Add token to dependencies
+
   const [newProject, setNewProject] = useState({ title: "", description: "" });
 
   const addProject = async (e) => {
